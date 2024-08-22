@@ -2,29 +2,35 @@
 
 namespace Model;
 
-class Producto extends ActiveRecord
+class Permiso extends ActiveRecord
 {
-    protected static $tabla = 'productos';
-    protected static $idTabla = 'id';
-    protected static $columnasDB = ['nombre', 'precio', 'situacion'];
+    protected static $tabla = 'permiso';
+    protected static $idTabla = 'permiso_id';
+    protected static $columnasDB = ['permiso_usuario', 'permiso_rol', 'permiso_situacion'];
 
-    public $id;
-    public $nombre;
-    public $precio;
-    public $situacion;
+    public $permiso_id;
+    public $permiso_usuario;
+    public $permiso_rol;
+    public $permiso_situacion;
 
 
     public function __construct($args = [])
     {
-        $this->id = $args['id'] ?? null;
-        $this->nombre = $args['nombre'] ?? '';
-        $this->precio = $args['precio'] ?? 0;
-        $this->situacion = $args['situacion'] ?? 1;
+        $this->permiso_id = $args['id'] ?? null;
+        $this->permiso_usuario = $args['permiso_usuario'] ?? '';
+        $this->permiso_rol = $args['permiso_rol'] ?? 0;
+        $this->permiso_situacion = $args['permiso_situacion'] ?? 1;
     }
 
-    public static function obtenerProductosconQuery()
+    public static function obtenerPermisoconQuery()
     {
-        $sql = "SELECT * FROM productos where situacion = 1";
+        $sql = "SELECT * FROM permiso where permiso_situacion = 1";
+        return self::fetchArray($sql);
+    }
+
+    public static function productosResumen()
+    {
+        $sql = "SELECT nombre as producto, sum(detalle_cantidad) as cantidad from detalle_ventas inner join productos on detalle_producto = id where detalle_situacion = 1 group by nombre";
         return self::fetchArray($sql);
     }
 }

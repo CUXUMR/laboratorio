@@ -3,36 +3,38 @@
 namespace Controllers;
 
 use Exception;
-use Model\Producto;
+use Model\Permiso;
 use MVC\Router;
 
-class ProductoController
+class PermisoController
 {
     public static function index(Router $router)
     {
-        $productos = Producto::find(2);
-        $router->render('productos/index', [
-            'productos' => $productos
+        $permisos = Permiso::find(2);
+        $router->render('permiso/index', [
+            'permisos' => $permisos
         ]);
     }
+   
 
     public static function guardarAPI()
     {
-        $_POST['nombre'] = htmlspecialchars($_POST['nombre']);
-        $_POST['precio'] = filter_var($_POST['precio'], FILTER_SANITIZE_NUMBER_FLOAT);
+        $_POST['permiso_usuario'] = htmlspecialchars($_POST['permiso_usuario']);
+        $_POST['permisp_rol'] = htmlspecialchars($_POST['permisp_rol']);
+     
         try {
-            $producto = new Producto($_POST);
-            $resultado = $producto->crear();
+            $permiso = new Permiso($_POST);
+            $resultado = $permiso->crear();
             http_response_code(200);
             echo json_encode([
                 'codigo' => 1,
-                'mensaje' => 'Producto guardado exitosamente',
+                'mensaje' => 'Permiso guardado exitosamente',
             ]);
         } catch (Exception $e) {
             http_response_code(500);
             echo json_encode([
                 'codigo' => 0,
-                'mensaje' => 'Error al guardar producto',
+                'mensaje' => 'Error al guardar permiso',
                 'detalle' => $e->getMessage(),
             ]);
         }
@@ -43,44 +45,44 @@ class ProductoController
         try {
             // ORM - ELOQUENT
             // $productos = Producto::all();
-            $productos = Producto::obtenerProductosconQuery();
+            $permiso = Permiso::obtenerPermisoconQuery();
             http_response_code(200);
             echo json_encode([
                 'codigo' => 1,
                 'mensaje' => 'Datos encontrados',
                 'detalle' => '',
-                'datos' => $productos
+                'datos' => $permiso
             ]);
         } catch (Exception $e) {
             http_response_code(500);
             echo json_encode([
                 'codigo' => 0,
-                'mensaje' => 'Error al buscar productos',
+                'mensaje' => 'Error al buscar permisos',
                 'detalle' => $e->getMessage(),
             ]);
         }
     }
-
+    
     public static function modificarAPI()
     {
-        $_POST['nombre'] = htmlspecialchars($_POST['nombre']);
-        $_POST['precio'] = filter_var($_POST['precio'], FILTER_SANITIZE_NUMBER_FLOAT);
-        $id = filter_var($_POST['pro_id'], FILTER_SANITIZE_NUMBER_INT);
+        $_POST['permiso_usuario'] = htmlspecialchars($_POST['permiso_usuario']);
+        $_POST['permiso_rol'] = htmlspecialchars($_POST['permiso_rol']);
+        $id = filter_var($_POST['permiso_id'], FILTER_SANITIZE_NUMBER_INT);
         try {
 
-            $producto = Producto::find($id);
-            $producto->sincronizar($_POST);
-            $producto->actualizar();
+            $permiso = Permiso::find($id);
+            $permiso->sincronizar($_POST);
+            $permiso->actualizar();
             http_response_code(200);
             echo json_encode([
                 'codigo' => 1,
-                'mensaje' => 'Producto modificado exitosamente',
+                'mensaje' => 'permiso modificado exitosamente',
             ]);
         } catch (Exception $e) {
             http_response_code(500);
             echo json_encode([
                 'codigo' => 0,
-                'mensaje' => 'Error al modificar producto',
+                'mensaje' => 'Error al modificar permiso',
                 'detalle' => $e->getMessage(),
             ]);
         }
@@ -92,22 +94,22 @@ class ProductoController
         $id = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
         try {
 
-            $producto = Producto::find($id);
+            $permiso = Permiso::find($id);
             // $producto->sincronizar([
             //     'situacion' => 0
             // ]);
             // $producto->actualizar();
-            $producto->eliminar();
+            $permiso->eliminar();
             http_response_code(200);
             echo json_encode([
                 'codigo' => 1,
-                'mensaje' => 'Producto eliminado exitosamente',
+                'mensaje' => 'permiso eliminado exitosamente',
             ]);
         } catch (Exception $e) {
             http_response_code(500);
             echo json_encode([
                 'codigo' => 0,
-                'mensaje' => 'Error al eliminado producto',
+                'mensaje' => 'Error al eliminado permiso',
                 'detalle' => $e->getMessage(),
             ]);
         }

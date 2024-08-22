@@ -1,6 +1,8 @@
 import { Dropdown } from "bootstrap";
 import { Toast, validarFormulario } from "../funciones";
 import Swal from "sweetalert2";
+import DataTable from "datatables.net-bs5";
+import { lenguaje } from "../lenguaje";
 
 
 const formulario = document.getElementById('formPermiso')
@@ -8,6 +10,48 @@ const tabla = document.getElementById('tablaPermiso')
 const btnGuardar = document.getElementById('btnGuardar')
 const btnModificar = document.getElementById('btnModificar')
 const btnCancelar = document.getElementById('btnCancelar')
+
+let contador = 1;
+const datatable = new DataTable('#tablaPermiso', {
+    data: null,
+    language: lenguaje,
+    pageLength: '15',
+    lengthMenu: [3, 9, 11, 25, 100],
+    columns: [
+        {
+            title: 'No.',
+            data: 'id',
+            width: '2%',
+            render: (data, type, row, meta) => {
+                // console.log(meta.ro);
+                return meta.row + 1;
+            }
+        },
+        {
+            title: 'Nombre Usuario',
+            data: 'permiso_usuario'
+        },
+        {
+            title: 'nombre rol',
+            data: 'permiso_rol'
+        },
+        {
+            title: 'Acciones',
+            data: 'id',
+            searchable: false,
+            orderable: false,
+            render: (data, type, row, meta) => {
+                let html = `
+                <button class='btn btn-warning modificar' data-id="${data}" data-usuario="${row.permiso_usuario}" data-rol="${row.periso_rol}" data-saludo="hola mundo"><i class='bi bi-pencil-square'></i>Modificar</button>
+                <button class='btn btn-danger eliminar' data-id="${data}">Eliminar</button>
+
+                `
+                return html;
+            }
+        },
+
+    ]
+})
 
 btnModificar.parentElement.style.display = 'none'
 btnModificar.disabled = true
@@ -68,65 +112,28 @@ const buscar = async () => {
         const respuesta = await fetch(url, config);
         const data = await respuesta.json();
         const { codigo, mensaje, detalle, datos } = data;
-        tabla.tBodies[0].innerHTML = ''
-        const fragment = document.createDocumentFragment();
+
+        // tabla.tBodies[0].innerHTML = ''
+        // const fragment = document.createDocumentFragment();
         console.log(datos);
-        if (codigo == 1) {
-            let counter = 1;
-            datos.forEach(permiso => {
-                const tr = document.createElement('tr');
-                const td1 = document.createElement('td');
-                const td2 = document.createElement('td');
-                const td3 = document.createElement('td');
-                const td4 = document.createElement('td');
-                const buttonModificar = document.createElement('button');
-                const buttonEliminar = document.createElement('button');
-                td1.innerText = counter
-                td2.innerText = permiso.nombre
-                td3.innerText = permiso.precio
+        datatable.clear().draw();
 
-                buttonModificar.classList.add('btn', 'btn-warning')
-                buttonEliminar.classList.add('btn', 'btn-danger')
-                buttonModificar.innerText = 'Modificar'
-                buttonEliminar.innerText = 'Eliminar'
-
-                buttonModificar.addEventListener('click', () => traerDatos(permiso))
-                buttonEliminar.addEventListener('click', () => eliminar(permiso))
-
-                td4.appendChild(buttonModificar)
-                td4.appendChild(buttonEliminar)
-
-                counter++
-
-                tr.appendChild(td1)
-                tr.appendChild(td2)
-                tr.appendChild(td3)
-                tr.appendChild(td4)
-                fragment.appendChild(tr)
-            })
-        } else {
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            td.innerText = "No hay productos"
-            td.colSpan = 4
-
-            tr.appendChild(td)
-            fragment.appendChild(tr)
+        if (datos) {
+            datatable.rows.add(datos).draw();
         }
-
-        tabla.tBodies[0].appendChild(fragment)
-
+      
     } catch (error) {
         console.log(error);
     }
 }
 buscar();
 
-const traerDatos = (permiso) => {
-    console.log(permiso);
-    formulario.pro_id.value = permiso.id
-    formulario.nombre.value = permiso.nombre
-    formulario.precio.value = permiso.precio
+const traerDatos = (e) => {
+    const elemento = e.currentTarget.dataset
+
+    formulario.permiso_id.value = elemento.permiso_idid
+    formulario.permiso_usuario.value = elemento.permiso_usuario
+    formulario.permiso_rol.value = elemento.permiso_rol
     tabla.parentElement.parentElement.style.display = 'none'
 
     btnGuardar.parentElement.style.display = 'none'
@@ -193,7 +200,8 @@ const modificar = async (e) => {
     }
 }
 
-const eliminar = async (permiso) => {
+const eliminar = async (e) => {
+    const id = e.currentTarget.dataset.id
     let confirmacion = await Swal.fire({
         icon: 'question',
         title: 'Confirmacion',
@@ -209,7 +217,7 @@ const eliminar = async (permiso) => {
     if (confirmacion.isConfirmed) {
         try {
             const body = new FormData()
-            body.append('id', permiso.id)
+            body.append('id', id)
             const url = "/laboratorio/API/permiso/eliminar"
             const config = {
                 method: 'POST',
@@ -243,3 +251,5 @@ const eliminar = async (permiso) => {
 formulario.addEventListener('submit', guardar)
 btnCancelar.addEventListener('click', cancelar)
 btnModificar.addEventListener('click', modificar)
+datatable.on('click', '.modificar', traerDatos)
+datatable.on('click', '.eliminar', eliminar)
