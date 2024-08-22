@@ -42,6 +42,7 @@ class ActiveRecord {
             // Creando un nuevo registro
             $resultado = $this->crear();
         }
+
         return $resultado;
     }
 
@@ -161,7 +162,9 @@ class ActiveRecord {
     // Eliminar un registro - Toma el ID de Active Record
     public function eliminar() {
         $idQuery = static::$idTabla ?? 'id';
-        $query = "DELETE FROM "  . static::$tabla . " WHERE $idQuery = " . self::$db->quote($this->id);
+        $query = "DELETE FROM "  . static::$tabla . " WHERE $idQuery = " . self::$db->quote($this->$idQuery);
+        // echo json_encode($query);
+        // exit;
         $resultado = self::$db->exec($query);
         return $resultado;
     }
