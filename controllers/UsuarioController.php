@@ -89,11 +89,11 @@ class UsuarioController
 
     public static function modificarAPI()
     {
+
         $_POST['usu_nombre'] = htmlspecialchars($_POST['usu_nombre']);
-        $_POST['usu_catalogo'] = filter_var($_POST['usu_catalogo'], FILTER_SANITIZE_NUMBER_FLOAT);
+        $_POST['usu_catalogo'] = filter_var($_POST['usu_catalogo'], FILTER_SANITIZE_NUMBER_INT);
         $_POST['usu_password'] = htmlspecialchars($_POST['usu_password']);
         $_POST['usu_password2'] = htmlspecialchars($_POST['usu_password2']);
-        $id = filter_var($_POST['usu_id'], FILTER_SANITIZE_NUMBER_INT);
 
         if ($_POST['usu_password'] != $_POST['usu_password2']) {
             echo json_encode([
@@ -104,19 +104,20 @@ class UsuarioController
             exit;
         }
 
-
-
         try {
-
-            $usuario = Usuario::find($id);
+            $_POST['usu_password'] = password_hash($_POST['usu_password'], PASSWORD_DEFAULT);
+            $usuario = Usuario::find($_POST['usu_id']);
             $usuario->sincronizar($_POST);
             $usuario->actualizar();
-            http_response_code(200);
+
             echo json_encode([
                 'codigo' => 1,
                 'mensaje' => 'Usuario modificado exitosamente',
+
             ]);
-        } catch (Exception $e) {
+            exit;
+        
+        }catch (Exception $e) {
             http_response_code(500);
             echo json_encode([
                 'codigo' => 0,
@@ -124,6 +125,7 @@ class UsuarioController
                 'detalle' => $e->getMessage(),
             ]);
         }
+    
     }
 
     public static function eliminarAPI()

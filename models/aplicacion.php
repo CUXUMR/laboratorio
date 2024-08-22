@@ -6,7 +6,7 @@ class Aplicacion extends ActiveRecord
 {
     protected static $tabla = 'Aplicacion';
     protected static $idTabla = 'app_id';
-    protected static $columnasDB = ['app_nombre'];
+    protected static $columnasDB = ['app_nombre','app_situacion'];
 
     public $app_id;
     public $app_nombre;
@@ -22,7 +22,7 @@ class Aplicacion extends ActiveRecord
 
     public static function obtenerAplicacionsconQuery()
     {
-        $sql = "SELECT * FROM Aplicacion where situacion = 1";
+        $sql = "SELECT * FROM Aplicacion where app_situacion = 1";
         return self::fetchArray($sql);
     }
 }
