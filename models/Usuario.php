@@ -47,4 +47,20 @@ class Usuario extends ActiveRecord
         $resultado = static::fetchFirst($sql);
         return $resultado;
     }
+
+    public function buscarusuario()
+    {
+        $sql = "SELECT * from usuario where usu_situacion = 1 ";
+
+        if ($this->usu_nombre != '') {
+            $sql .= " and usu_nombre like '%$this->usu_nombre%' ";
+        }
+
+
+        if ($this->usu_id != null) {
+            $sql .= " and usu_id = $this->usu_id ";
+        }
+        return self::fetchArray($sql);
+
+    }
 }

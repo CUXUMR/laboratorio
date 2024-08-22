@@ -7,6 +7,8 @@ module.exports = {
     'js/inicio' : './src/js/inicio.js',
     'js/usuario/index' : './src/js/usuario/index.js',
     'js/aplicacion/index' : './src/js/aplicacion/index.js',
+    'js/rol/index' : './src/js/rol/index.js',
+    'js/permiso/index' : './src/js/permiso/index.js',
 
 
   },

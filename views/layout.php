@@ -40,6 +40,11 @@
                             <li>
                                 <a class="dropdown-item nav-link text-white " href="/laboratorio/aplicacion"><i class="ms-lg-0 ms-2 bi bi-plus-circle me-2"></i>Aplicaciones</a>
                             </li>
+
+                            <li>
+                                <a class="dropdown-item nav-link text-white " href="/laboratorio/rol"><i class="ms-lg-0 ms-2 bi bi-plus-circle me-2"></i>Roles</a>
+                            </li>
+                        
                         
                         
                     

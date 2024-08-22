@@ -5,6 +5,7 @@ use Controllers\AplicacionController;
 use Controllers\AplicacionControllers;
 use MVC\Router;
 use Controllers\AppController;
+use Controllers\RolController;
 use Controllers\UsuarioController;
 
 
@@ -30,6 +31,24 @@ $router->post('/API/aplicacion/guardar', [AplicacionController::class,'guardarAP
 $router->post('/API/aplicacion/modificar', [AplicacionController::class,'modificarAPI']);
 $router->get('/API/aplicacion/buscar', [AplicacionController::class,'buscarAPI']);
 $router->post('/API/aplicacion/eliminar', [AplicacionController::class,'eliminarAPI']);
+
+//roles
+$router->get('/rol', [RolController::class,'index']);
+$router->post('/API/rol/guardar', [RolController::class,'guardarAPI']);
+$router->post('/API/rol/modificar', [RolController::class,'modificarAPI']);
+$router->get('/API/rol/buscar', [RolController::class,'buscarAPI']);
+$router->post('/API/rol/eliminar', [RolController::class,'eliminarAPI']);
+
+
+//permisos
+$router->get('/rol', [RolController::class,'index']);
+$router->post('/API/rol/guardar', [RolController::class,'guardarAPI']);
+$router->post('/API/rol/modificar', [RolController::class,'modificarAPI']);
+$router->get('/API/rol/buscar', [RolController::class,'buscarAPI']);
+$router->post('/API/rol/eliminar', [RolController::class,'eliminarAPI']);
+
+
+
 
 
 
